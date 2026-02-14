@@ -1,51 +1,64 @@
 # Final Project Proposal for CMSC 22300
-# Project Title: PolyCodec: A Multi-Purpose, Multi-Media OS-Agnostic Encoder/Decoder
+
+# Project Title: Pyleft: A Pyright replacement, 
 
 ## Author: Ziad Elshahawy
-## Email: zelshahawy@uchicago.edu
+
+## Email: [zelshahawy@uchicago.edu](mailto:zelshahawy@uchicago.edu)
 
 ### Concept Overview
 
-For my final project, I considered several ideas, including an image processor, a C++-like algorithms library, and a RAG-based system. After deliberation, I decided to focus on a more systems-oriented project: a multi-purpose encoder and decoder application.
-The application will provide a general framework for encoding and decoding files using different compression algorithms. Users will be able to choose which algorithm to apply, while the program reports information such as expected or actual compression size
-to help guide that choice. The emphasis of the project is on correctness, performance, and clean system design rather than on compression alone.
+For my final project, I will build **Pyleft**, a Python linter written in **Haskell** that performs **AST-based static analysis** on Python source files.
+The core idea is to parse Python into an abstract syntax tree, then walk that tree to enforce a set of correctness and style rules that require *semantic structure* (not just regex scanning).
+The tool will run from the command line, analyze one or more `.py` files, and report warnings/errors with file, line, and column information.
+
+To keep the project focused and robust, I will use Python’s built-in `ast` module as a front-end parser: Haskell will then decode that JSON into typed data structures and run the linter rules in a mostly pure pipeline.
+This may not be the cleanest solution though, so I will look for alternatives that would not need any python modules.
+
+This design should help me place emphasis on Haskell data modeling, traversal, and scope tracking, rather than on implementing a full Python grammar from scratch.
 
 ### Goals and Milestones
+
 #### Easy
 
-- Implement at least one lossless compression algorithm (namely LZW or Huffman).
+* Support linting a single `.py` file from the command line (and print diagnostics).
+* Parse Python into an AST (via JSON) and decode it into Haskell types.
+* Implement a basic rule set that clearly requires AST structure:
 
-- Support encoding and decoding of files via a command-line interface.
-
-- Ensure decoded output exactly matches the original input.
-
-- Reduce unnecessary I/O using a relatively lazy, streaming-based approach.
+  * Flag **bare `except:`** clauses.
+  * Flag **wildcard imports** (`from x import *`).
+  * Flag **mutable default arguments** (`def f(x=[]): ...`).
+* Print diagnostics in a standard format: `path:line:col: [severity] message`.
 
 #### Medium
 
-- Support multiple compression algorithms.
+* Add **scope-aware analysis** (per module / function / class):
 
-- Report compression ratios and output sizes.
-
-- Add multithreading to process multiple files concurrently.
-
-- Design the system to be easily extensible with new algorithms.
+  * Detect **unused imports**.
+  * Detect **unused local variables** (simple version).
+  * Detect **shadowing built-ins** (`list`, `dict`, `id`, etc.).
+* Support linting multiple files / directories recursively.
+* Add configuration (minimal, optional): allow disabling rules or setting severity levels.
 
 #### Challenge
 
-- Use multithreading to compress a single file in parallel.
+* Add threading support for single and multiple files usage.
+* Improve precision and reduce false positives:
 
-- Experiment with or partially implement a lossy audio compression algorithm (e.g., MP3-style), time permitting.
+  * Track “read vs assigned” for variables more accurately.
+  * Handle `global` / `nonlocal` cases reasonably.
+  * Handle comprehensions and exception bindings (`except E as x`) correctly.
+* Add a “fix suggestion” mode (no auto-edit required) that prints recommended rewrites for certain rules:
 
-- Further optimize performance for large inputs.
-
-- Depending on progress, the project may remain focused on efficient lossless compression or expand into a broader comparison framework for different heuristics.
+  * `except:` → `except Exception:`
+  * Mutable defaults → `None` pattern with initialization in body
+* If time permits: implement a small **control-flow aware** rule (basic unreachable code after `return` in the same block, or always-true conditions for a limited set).
 
 ### Additional Topics and Resources
 
-This project will require learning more about compression algorithms, multithreading, and efficient file I/O. I expect to learn most of these independently through documentation and reference implementations, though concurrency design and performance tradeoffs may
-benefit from discussion in office hours or class.
+I expect to learn most of this through Python documentation for `ast`, Haskell library docs, and prior course material on algebraic data types, recursion, and monadic/applicative organization.
 
 ### Inspiration and Collaboration
 
-This idea is inspired by course assigment such as the vigenere assigment, prior systems programming experience, and personal interest in performance-critical software. I plan to discuss ideas with classmates and TA's, giving the appropriate citations when needed.
+I was inspired by the Readers/Writers Lecture. I have also been inspired by my deep hate for pyright (long story), and I would be immeasurably happy to replace it. Even though I have been aware of the theory behind it,
+This is the first time I interact with AST's so I expect to have a lot of fun with this.
