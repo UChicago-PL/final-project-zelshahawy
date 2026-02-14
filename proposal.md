@@ -22,7 +22,7 @@ This design should help me place emphasis on Haskell data modeling, traversal, a
 #### Easy
 
 * Support linting a single `.py` file from the command line (and print diagnostics).
-* Parse Python into an AST (via JSON) and decode it into Haskell types.
+* Parse Python into an AST and decode it into Haskell types.
 * Implement a basic rule set that clearly requires AST structure:
 
   * Flag **bare `except:`** clauses.
@@ -35,7 +35,7 @@ This design should help me place emphasis on Haskell data modeling, traversal, a
 * Add **scope-aware analysis** (per module / function / class):
 
   * Detect **unused imports**.
-  * Detect **unused local variables** (simple version).
+  * Detect **unused local variables**.
   * Detect **shadowing built-ins** (`list`, `dict`, `id`, etc.).
 * Support linting multiple files / directories recursively.
 * Add configuration (minimal, optional): allow disabling rules or setting severity levels.
@@ -47,11 +47,13 @@ This design should help me place emphasis on Haskell data modeling, traversal, a
 
   * Track “read vs assigned” for variables more accurately.
   * Handle `global` / `nonlocal` cases reasonably.
+  * Variable type changes.
   * Handle comprehensions and exception bindings (`except E as x`) correctly.
 * Add a “fix suggestion” mode (no auto-edit required) that prints recommended rewrites for certain rules:
 
   * `except:` → `except Exception:`
   * Mutable defaults → `None` pattern with initialization in body
+
 * If time permits: implement a small **control-flow aware** rule (basic unreachable code after `return` in the same block, or always-true conditions for a limited set).
 
 ### Additional Topics and Resources
