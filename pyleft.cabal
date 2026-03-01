@@ -25,6 +25,8 @@ library
       Pyleft.Lint.Registry
       Pyleft.Rules.WildcardImport
       Pyleft.Rules.MutableDefaults
+      Pyleft.Rules.MutableDefaults
+      Pyleft.Rules.MakeDiag
   build-depends:
       base ^>=4.18.3.0
     , aeson

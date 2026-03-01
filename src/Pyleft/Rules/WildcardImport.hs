@@ -6,49 +6,41 @@ module Pyleft.Rules.WildcardImport
 where
 
 import Data.Aeson (Value (..))
-import qualified Data.Aeson.Key as K
-import qualified Data.Aeson.KeyMap as KM
-import qualified Data.Vector as V
-import Pyleft.Lint.Types (Diagnostic (..), Severity (..))
+import Data.Aeson.Key qualified as K
+import Data.Aeson.KeyMap qualified as KM
+import Data.Vector qualified as V
+import Pyleft.Lint.Types (Diagnostic, Severity (..))
+import Pyleft.Rules.MakeDiag (mkDiag)
 
 wildcardImportDiagnostics :: FilePath -> Value -> [Diagnostic]
 wildcardImportDiagnostics path = go
   where
+    go :: Value -> [Diagnostic]
     go (Object o) =
       let here =
-            case KM.lookup "_type" o of
+            case KM.lookup (K.fromString "_type") o of
               Just (String "ImportFrom")
-                | hasStar o -> [mkDiag o]
+                | hasStar o -> [diag o]
               _ -> []
        in here <> foldMap go (KM.elems o)
     go (Array a) = foldMap go (V.toList a)
     go _ = []
 
+    diag :: KM.KeyMap Value -> Diagnostic
+    diag =
+      mkDiag
+        path
+        Warning
+        "Wildcard import detected (`from x import *`)"
+
     hasStar :: KM.KeyMap Value -> Bool
     hasStar o =
-      case KM.lookup "names" o of
-        Just (Array arr) ->
-          any isStarAlias (V.toList arr)
+      case KM.lookup (K.fromString "names") o of
+        Just (Array arr) -> any isStarAlias (V.toList arr)
         _ -> False
 
     isStarAlias :: Value -> Bool
     isStarAlias (Object a) =
-      KM.lookup "_type" a == Just (String "alias")
-        && KM.lookup "name" a == Just (String "*")
+      KM.lookup (K.fromString "_type") a == Just (String "alias")
+        && KM.lookup (K.fromString "name") a == Just (String "*")
     isStarAlias _ = False
-
-    mkDiag :: KM.KeyMap Value -> Diagnostic
-    mkDiag o =
-      Diagnostic
-        { diagPath = path,
-          diagLine = intField "lineno" o,
-          diagCol = intField "col_offset" o,
-          diagSeverity = Warning,
-          diagMessage = "Wildcard import detected (`from x import *`)"
-        }
-
-    intField :: K.Key -> KM.KeyMap Value -> Int
-    intField k o =
-      case KM.lookup k o of
-        Just (Number n) -> floor n
-        _ -> 1
