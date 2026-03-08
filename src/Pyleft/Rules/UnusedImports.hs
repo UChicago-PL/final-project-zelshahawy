@@ -4,8 +4,8 @@ module Pyleft.Rules.UnusedImports
 where
 
 import Data.Aeson (Value)
-import qualified Data.Map.Strict as M
-import qualified Data.Set as S
+import Data.Map.Strict qualified as M
+import Data.Set qualified as S
 import Pyleft.Lint.Scope
   ( Binding (..),
     BindingKind (..),
@@ -30,6 +30,7 @@ unusedImportDiagnostics path ast =
     isUnusedImport usedNames b =
       bindingKind b == ImportBinding
         && bindingName b `S.notMember` usedNames
+        && (bindingName b /= "*")
 
     mkDiag :: Binding -> Diagnostic
     mkDiag b =

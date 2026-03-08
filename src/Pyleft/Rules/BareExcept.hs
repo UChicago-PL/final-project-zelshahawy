@@ -20,7 +20,6 @@ bareExceptDiagnostics path = go
       let here =
             case (KM.lookup (K.fromString "_type") o, KM.lookup (K.fromString "type") o) of
               (Just (String "ExceptHandler"), Just Null) -> [diag o]
-              (Just (String "ExceptHandler"), Nothing) -> [diag o]
               _ -> []
        in here <> foldMap go (KM.elems o)
     go (Array a) = foldMap go (V.toList a)

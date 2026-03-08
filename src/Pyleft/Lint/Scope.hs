@@ -13,12 +13,12 @@ module Pyleft.Lint.Scope
 where
 
 import Data.Aeson (Value (..))
-import qualified Data.Aeson.Key as K
-import qualified Data.Aeson.KeyMap as KM
-import qualified Data.Map.Strict as M
-import qualified Data.Set as S
-import qualified Data.Text as T
-import qualified Data.Vector as V
+import Data.Aeson.Key qualified as K
+import Data.Aeson.KeyMap qualified as KM
+import Data.Map.Strict qualified as M
+import Data.Set qualified as S
+import Data.Text qualified as T
+import Data.Vector qualified as V
 
 data BindingKind
   = ImportBinding
@@ -159,11 +159,7 @@ collectFunctionLike o =
 
     -- These expressions are evaluated in the outer scope.
     outerUses =
-      collectChildren $
-        concat
-          [ maybeToList (field "decorator_list" o),
-            maybeToList (field "returns" o)
-          ]
+      collectChildren (maybeToList (field "decorator_list" o) ++ maybeToList (field "returns" o))
 
     childScope =
       Collected
@@ -227,10 +223,7 @@ buildFunctionScope o =
     paramBindings =
       Collected (functionParamBindings o) S.empty []
 
-    bodyCollected =
-      case field "body" o of
-        Just bodyVal -> collectInCurrentScope bodyVal
-        Nothing -> mempty
+    bodyCollected = maybe mempty collectInCurrentScope (field "body" o)
 
 buildLambdaScope :: KM.KeyMap Value -> ScopeInfo
 buildLambdaScope o =
@@ -239,10 +232,7 @@ buildLambdaScope o =
     paramBindings =
       Collected (lambdaParamBindings o) S.empty []
 
-    bodyCollected =
-      case field "body" o of
-        Just bodyVal -> collectInCurrentScope bodyVal
-        Nothing -> mempty
+    bodyCollected = maybe mempty collectInCurrentScope (field "body" o)
 
 buildClassScope :: KM.KeyMap Value -> ScopeInfo
 buildClassScope o =
@@ -321,10 +311,10 @@ nameContext o = do
     _ -> Nothing
 
 nodeType :: KM.KeyMap Value -> Maybe String
-nodeType o = textField "_type" o
+nodeType = textField "_type"
 
 field :: String -> KM.KeyMap Value -> Maybe Value
-field k o = KM.lookup (K.fromString k) o
+field k = KM.lookup (K.fromString k)
 
 textField :: String -> KM.KeyMap Value -> Maybe String
 textField k o =
