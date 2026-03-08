@@ -30,6 +30,8 @@ library
       Pyleft.Rules.ShadowBuiltins
       Pyleft.Lint.Scope
       Pyleft.Lint.Registry
+      Pyleft.Driver.Discover
+      Pyleft.CLI.Options
   build-depends:
       base ^>=4.18.3.0
     , aeson
@@ -40,6 +42,7 @@ library
     , directory
     , vector
     , containers
+    , optparse-applicative
   default-language: GHC2021
 
 executable pyleft
