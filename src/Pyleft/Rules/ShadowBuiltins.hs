@@ -4,8 +4,8 @@ module Pyleft.Rules.ShadowBuiltins
 where
 
 import Data.Aeson (Value)
-import qualified Data.Map.Strict as M
-import qualified Data.Set as S
+import Data.Map.Strict qualified as M
+import Data.Set qualified as S
 import Pyleft.Lint.Scope
   ( Binding (..),
     ScopeInfo (..),
@@ -36,5 +36,6 @@ shadowBuiltinsDiagnostics path ast =
           diagCol = bindingCol b,
           diagSeverity = Warning,
           diagMessage =
-            "Name shadows Python built-in: `" <> bindingName b <> "`"
+            "Name shadows Python built-in: `" <> bindingName b <> "`",
+          pepEight = "A001"
         }

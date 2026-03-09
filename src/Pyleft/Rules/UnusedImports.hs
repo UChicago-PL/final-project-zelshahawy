@@ -40,5 +40,6 @@ unusedImportDiagnostics path ast =
           diagCol = bindingCol b,
           diagSeverity = Warning,
           diagMessage =
-            "Unused import: `" <> bindingName b <> "`"
+            "Unused import: `" <> bindingName b <> "`",
+          pepEight = "F401"
         }

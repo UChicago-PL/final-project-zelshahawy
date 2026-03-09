@@ -12,6 +12,7 @@ data Diagnostic = Diagnostic
     diagLine :: Int,
     diagCol :: Int,
     diagSeverity :: Severity,
-    diagMessage :: String
+    diagMessage :: String,
+    pepEight :: String
   }
   deriving (Eq, Show)

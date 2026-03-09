@@ -32,6 +32,7 @@ mutableDefaultDiagnostics path = go
         path
         Warning
         "Mutable default argument detected"
+        "P671"
 
     hasMutableDefault :: KM.KeyMap Value -> Bool
     hasMutableDefault o =

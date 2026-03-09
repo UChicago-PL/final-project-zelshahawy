@@ -32,6 +32,7 @@ wildcardImportDiagnostics path = go
         path
         Warning
         "Wildcard import detected (`from x import *`)"
+        "F403"
 
     hasStar :: KM.KeyMap Value -> Bool
     hasStar o =

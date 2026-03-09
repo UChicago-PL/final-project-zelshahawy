@@ -7,7 +7,7 @@ import Pyleft.Lint.Types
 
 formatDiagnosticPure :: Bool -> Diagnostic -> String
 formatDiagnosticPure useColor d =
-  dim useColor (loc <> ": ") <> sevTag useColor (diagSeverity d) <> " " <> diagMessage d
+  ansiRed (pepEight d) <> " " <> dim useColor (loc <> ": ") <> sevTag useColor (diagSeverity d) <> " " <> diagMessage d
   where
     loc =
       diagPath d <> ":" <> show (diagLine d) <> ":" <> show (diagCol d)

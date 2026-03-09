@@ -31,3 +31,4 @@ bareExceptDiagnostics path = go
         path
         Warning
         "Bare except detected (use `except Exception:` or a specific exception)"
+        "E722"

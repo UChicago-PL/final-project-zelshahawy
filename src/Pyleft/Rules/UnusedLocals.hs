@@ -4,8 +4,8 @@ module Pyleft.Rules.UnusedLocals
 where
 
 import Data.Aeson (Value)
-import qualified Data.Map.Strict as M
-import qualified Data.Set as S
+import Data.Map.Strict qualified as M
+import Data.Set qualified as S
 import Pyleft.Lint.Scope
   ( Binding (..),
     BindingKind (..),
@@ -45,5 +45,6 @@ unusedLocalDiagnostics path ast =
           diagCol = bindingCol b,
           diagSeverity = Warning,
           diagMessage =
-            "Unused local variable: `" <> bindingName b <> "`"
+            "Unused local variable: `" <> bindingName b <> "`",
+          pepEight = "F841"
         }
