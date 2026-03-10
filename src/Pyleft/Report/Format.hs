@@ -7,10 +7,10 @@ import Pyleft.Lint.Types
 
 formatDiagnosticPure :: Bool -> Diagnostic -> String
 formatDiagnosticPure useColor d =
-  ansiRed (pepEight d) <> " " <> dim useColor (loc <> ": ") <> sevTag useColor (diagSeverity d) <> " " <> diagMessage d
+  ansiRed (pepEight d) <> " " <> (loc <> ": ") <> sevTag useColor (diagSeverity d) <> " " <> diagMessage d
   where
     loc =
-      diagPath d <> ":" <> show (diagLine d) <> ":" <> show (diagCol d)
+      ansiDim (diagPath d <> ": ") <> ansiYellow (show (diagLine d)) <> ":" <> ansiYellow (show (diagCol d))
 
 sevTag :: Bool -> Severity -> String
 sevTag useColor s =
@@ -38,9 +38,8 @@ ansiRed s = "\ESC[31m" <> s <> ansiReset
 ansiBlue :: String -> String
 ansiBlue s = "\ESC[34m" <> s <> ansiReset
 
-dim :: Bool -> String -> String
-dim False s = s
-dim True s = ansiDim s
+ansiYellow :: String -> String
+ansiYellow s = "\ESC[33m" <> s <> ansiReset
 
 colorWarning :: Bool -> String -> String
 colorWarning False s = s
