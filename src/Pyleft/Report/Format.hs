@@ -18,6 +18,7 @@ sevTag useColor s =
     <> case s of
       Warning -> colorWarning useColor "warning"
       Error -> colorError useColor "error"
+      Info -> colorInfo useColor "info"
     <> "]"
 
 -- Styling helpers
@@ -34,6 +35,9 @@ ansi256 n s = "\ESC[38;5;" <> show n <> "m" <> s <> ansiReset
 ansiRed :: String -> String
 ansiRed s = "\ESC[31m" <> s <> ansiReset
 
+ansiBlue :: String -> String
+ansiBlue s = "\ESC[34m" <> s <> ansiReset
+
 dim :: Bool -> String -> String
 dim False s = s
 dim True s = ansiDim s
@@ -45,3 +49,7 @@ colorWarning True s = ansi256 208 s -- orange-ish
 colorError :: Bool -> String -> String
 colorError False s = s
 colorError True s = ansiRed s
+
+colorInfo :: Bool -> String -> String
+colorInfo False s = s
+colorInfo True s = ansiBlue s

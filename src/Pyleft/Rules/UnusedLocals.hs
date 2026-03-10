@@ -46,5 +46,6 @@ unusedLocalDiagnostics path ast =
           diagSeverity = Warning,
           diagMessage =
             "Unused local variable: `" <> bindingName b <> "`",
-          pepEight = "F841"
+          pepEight = "F841",
+          diagRule = "unused-local"
         }

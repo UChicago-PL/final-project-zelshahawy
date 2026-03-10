@@ -4,7 +4,7 @@ module Pyleft.Lint.Types
   )
 where
 
-data Severity = Warning | Error
+data Severity = Warning | Error | Info
   deriving (Eq, Ord, Show)
 
 data Diagnostic = Diagnostic
@@ -13,6 +13,7 @@ data Diagnostic = Diagnostic
     diagCol :: Int,
     diagSeverity :: Severity,
     diagMessage :: String,
-    pepEight :: String
+    pepEight :: String,
+    diagRule :: String
   }
   deriving (Eq, Show)

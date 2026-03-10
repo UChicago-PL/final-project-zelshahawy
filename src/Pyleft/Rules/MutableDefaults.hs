@@ -29,6 +29,7 @@ mutableDefaultDiagnostics path = go
     diag :: KM.KeyMap Value -> Diagnostic
     diag =
       mkDiag
+        "mutable-defaults"
         path
         Warning
         "Mutable default argument detected"

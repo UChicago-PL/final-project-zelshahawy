@@ -28,6 +28,7 @@ bareExceptDiagnostics path = go
     diag :: KM.KeyMap Value -> Diagnostic
     diag =
       mkDiag
+        "bare-except"
         path
         Warning
         "Bare except detected (use `except Exception:` or a specific exception)"

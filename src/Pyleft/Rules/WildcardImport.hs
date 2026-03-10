@@ -29,6 +29,7 @@ wildcardImportDiagnostics path = go
     diag :: KM.KeyMap Value -> Diagnostic
     diag =
       mkDiag
+        "wildcard-import"
         path
         Warning
         "Wildcard import detected (`from x import *`)"

@@ -4,6 +4,7 @@ import Data.Aeson (Value, eitherDecode)
 import Pyleft.CLI.Options (Options (..), parseOptions)
 import Pyleft.Driver.Discover (discoverPythonFiles)
 import Pyleft.Frontend.Parse (parseFileToAstJson)
+import Pyleft.Lint.Config (LintConfig, applyConfig, loadConfig)
 import Pyleft.Lint.Registry (runAllRules)
 import Pyleft.Report.Format (formatDiagnosticPure)
 import System.IO (hIsTerminalDevice, stdout)
@@ -11,23 +12,24 @@ import System.IO (hIsTerminalDevice, stdout)
 main :: IO ()
 main = do
   opts <- parseOptions
-  runPaths (optMaxDepth opts) (optPaths opts)
+  cfg <- loadConfig
+  runPaths cfg (optMaxDepth opts) (optPaths opts)
 
-runPaths :: Int -> [FilePath] -> IO ()
-runPaths maxDepth paths = do
+runPaths :: LintConfig -> Int -> [FilePath] -> IO ()
+runPaths cfg maxDepth paths = do
   files <- discoverPythonFiles maxDepth paths
   useColor <- hIsTerminalDevice stdout
 
   case files of
     [] -> putStrLn "No Python files found."
-    _ -> mapM_ (runOne useColor) files
+    _ -> mapM_ (runOne cfg useColor) files
 
-runOne :: Bool -> FilePath -> IO ()
-runOne useColor path = do
+runOne :: LintConfig -> Bool -> FilePath -> IO ()
+runOne cfg useColor path = do
   jsonBytes <- parseFileToAstJson path
   case eitherDecode jsonBytes :: Either String Value of
     Left e ->
       putStrLn (path <> ": Failed to decode AST JSON: " <> e)
     Right astVal -> do
-      let diags = runAllRules path astVal
+      let diags = applyConfig cfg (runAllRules path astVal)
       mapM_ (putStrLn . formatDiagnosticPure useColor) diags

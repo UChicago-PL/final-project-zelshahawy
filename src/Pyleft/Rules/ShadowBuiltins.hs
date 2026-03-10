@@ -37,5 +37,6 @@ shadowBuiltinsDiagnostics path ast =
           diagSeverity = Warning,
           diagMessage =
             "Name shadows Python built-in: `" <> bindingName b <> "`",
-          pepEight = "A001"
+          pepEight = "A001",
+          diagRule = "shadow-builtins"
         }
