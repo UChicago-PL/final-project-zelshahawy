@@ -1,4 +1,4 @@
-disable = ["shadow-builtins"]
+disable = []
 
 [severity]
 bare-except = "error"
@@ -6,3 +6,4 @@ unused-import = "warning"
 unused-local = "error"
 mutable-defaults = "info"
 wildcard-import = "error"
+shadow-builtins = "error"
