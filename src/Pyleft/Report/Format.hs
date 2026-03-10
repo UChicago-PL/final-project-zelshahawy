@@ -10,7 +10,7 @@ formatDiagnosticPure useColor d =
   ansiRed (pepEight d) <> " " <> (loc <> ": ") <> sevTag useColor (diagSeverity d) <> " " <> diagMessage d
   where
     loc =
-      ansiDim (diagPath d <> ": ") <> ansiYellow (show (diagLine d)) <> ":" <> ansiYellow (show (diagCol d))
+      ansiMintGreen (diagPath d <> ": ") <> ansiYellow (show (diagLine d)) <> ":" <> ansiYellow (show (diagCol d))
 
 sevTag :: Bool -> Severity -> String
 sevTag useColor s =
@@ -26,9 +26,6 @@ sevTag useColor s =
 ansiReset :: String
 ansiReset = "\ESC[0m"
 
-ansiDim :: String -> String
-ansiDim s = "\ESC[2m" <> s <> ansiReset
-
 ansi256 :: Int -> String -> String
 ansi256 n s = "\ESC[38;5;" <> show n <> "m" <> s <> ansiReset
 
@@ -40,6 +37,9 @@ ansiBlue s = "\ESC[34m" <> s <> ansiReset
 
 ansiYellow :: String -> String
 ansiYellow s = "\ESC[33m" <> s <> ansiReset
+
+ansiMintGreen :: String -> String
+ansiMintGreen s = "\ESC[38;5;49m" <> s <> ansiReset
 
 colorWarning :: Bool -> String -> String
 colorWarning False s = s
