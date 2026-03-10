@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Pyleft.Lint.Config
   ( LintConfig (..),
     defaultConfig,
@@ -9,8 +11,8 @@ where
 import Data.Map.Strict qualified as M
 import Data.Maybe qualified
 import Data.Set qualified as S
-import Data.Text qualified as T
 import Pyleft.Lint.Types (Diagnostic (..), Severity (..))
+import Pyleft.Report.Format (Theme (..))
 import System.Directory (doesFileExist)
 import TOML
   ( DecodeTOML (..),
@@ -20,13 +22,15 @@ import TOML
 
 data RawConfig = RawConfig
   { rawDisable :: Maybe [String],
-    rawSeverity :: Maybe (M.Map String String)
+    rawSeverity :: Maybe (M.Map String String),
+    rawTheme :: Maybe String
   }
   deriving (Eq, Show)
 
 data LintConfig = LintConfig
   { cfgDisabledRules :: S.Set String,
-    cfgSeverityMap :: M.Map String Severity
+    cfgSeverityMap :: M.Map String Severity,
+    cfgTheme :: Theme
   }
   deriving (Eq, Show)
 
@@ -34,7 +38,8 @@ defaultConfig :: LintConfig
 defaultConfig =
   LintConfig
     { cfgDisabledRules = S.empty,
-      cfgSeverityMap = M.empty
+      cfgSeverityMap = M.empty,
+      cfgTheme = DarkMode
     }
 
 loadConfig :: IO LintConfig
@@ -70,7 +75,9 @@ fromRawConfig raw =
   LintConfig
     { cfgDisabledRules = S.fromList (Data.Maybe.fromMaybe [] (rawDisable raw)),
       cfgSeverityMap =
-        M.mapMaybe parseSeverity (Data.Maybe.fromMaybe M.empty (rawSeverity raw))
+        M.mapMaybe parseSeverity (Data.Maybe.fromMaybe M.empty (rawSeverity raw)),
+      cfgTheme =
+        maybe DarkMode parseTheme (rawTheme raw)
     }
 
 parseSeverity :: String -> Maybe Severity
@@ -81,8 +88,15 @@ parseSeverity s =
     "error" -> Just Error
     _ -> Nothing
 
+parseTheme :: String -> Theme
+parseTheme s =
+  case s of
+    "light" -> LightMode
+    _ -> DarkMode
+
 instance DecodeTOML RawConfig where
   tomlDecoder =
     RawConfig
-      <$> getFieldOpt (T.pack "disable")
-      <*> getFieldOpt (T.pack "severity")
+      <$> getFieldOpt "disable"
+      <*> getFieldOpt "severity"
+      <*> getFieldOpt "theme"

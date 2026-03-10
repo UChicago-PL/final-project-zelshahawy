@@ -4,7 +4,7 @@ import Data.Aeson (Value, eitherDecode)
 import Pyleft.CLI.Options (Options (..), parseOptions)
 import Pyleft.Driver.Discover (discoverPythonFiles)
 import Pyleft.Frontend.Parse (parseFileToAstJson)
-import Pyleft.Lint.Config (LintConfig, applyConfig, loadConfig)
+import Pyleft.Lint.Config (LintConfig, applyConfig, cfgTheme, loadConfig)
 import Pyleft.Lint.Registry (runAllRules)
 import Pyleft.Report.Format (formatDiagnosticPure)
 import System.IO (hIsTerminalDevice, stdout)
@@ -32,4 +32,4 @@ runOne cfg useColor path = do
       putStrLn (path <> ": Failed to decode AST JSON: " <> e)
     Right astVal -> do
       let diags = applyConfig cfg (runAllRules path astVal)
-      mapM_ (putStrLn . formatDiagnosticPure useColor) diags
+      mapM_ (putStrLn . formatDiagnosticPure useColor (cfgTheme cfg)) diags
