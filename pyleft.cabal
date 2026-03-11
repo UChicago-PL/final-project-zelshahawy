@@ -8,6 +8,15 @@ maintainer:         ziadelshahawygit@gmail.com
 build-type:         Simple
 extra-doc-files:    CHANGELOG.md
 extra-source-files: scripts/dump_ast_json.py
+category: Development, Lint
+synopsis:
+  A Python linter written in Haskell using AST-based static analysis
+
+description:
+  Pyleft is a Python linter written in Haskell. It parses Python source files
+  into an AST, applies rule-based static analysis, and reports diagnostics with
+  file and source location information. It supports recursive directory linting,
+  optional TOML configuration via pyleft.toml, and configurable severity levels.
 
 common warnings
   ghc-options: -Wall
@@ -34,18 +43,18 @@ library
       Pyleft.CLI.Options
       Pyleft.Lint.Config
   build-depends:
-      base ^>=4.18.3.0
-    , aeson
-    , bytestring
-    , text
-    , filepath
-    , process
-    , directory
-    , vector
-    , containers
-    , optparse-applicative
-    , toml-reader
-    , async
+        base ^>=4.18.3.0
+      , aeson >=2.1 && <2.3
+      , bytestring >=0.11 && <0.13
+      , text >=2.0 && <2.2
+      , filepath >=1.4 && <1.6
+      , process >=1.6 && <1.7
+      , directory >=1.3 && <1.4
+      , vector >=0.13 && <0.14
+      , containers >=0.6 && <0.8
+      , optparse-applicative >=0.18 && <0.20
+      , toml-reader ^>=0.3.0.0
+      , async >=2.2 && <2.3
   default-language: GHC2021
 
 executable pyleft
@@ -66,3 +75,7 @@ test-suite pyleft-test
       base ^>=4.18.3.0
     , pyleft
   default-language: GHC2021
+
+source-repository head
+  type: git
+  location: https://github.com/zelshahawy/pyleft.git
