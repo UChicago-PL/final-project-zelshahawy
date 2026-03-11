@@ -45,6 +45,7 @@ library
     , containers
     , optparse-applicative
     , toml-reader
+    , async
   default-language: GHC2021
 
 executable pyleft
