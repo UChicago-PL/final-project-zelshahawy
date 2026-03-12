@@ -75,3 +75,7 @@ mutable-defaults = "warning"
 wildcard-import = "warning"
 shadow-builtins = "error"
 ```
+
+## Proposal Implemented
+
+I did all the easy and medium stuff. And the Challenge: Add threading support for single and multiple files usage.
