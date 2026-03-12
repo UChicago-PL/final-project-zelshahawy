@@ -1,0 +1,9 @@
+theme = "light"
+disable = []
+
+[severity]
+unused-import = "warning"
+unused-local = "info"
+mutable-defaults = "warning"
+wildcard-import = "warning"
+shadow-builtins = "error"
