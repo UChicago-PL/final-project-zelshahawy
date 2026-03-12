@@ -1,9 +1,9 @@
 theme = "light"
-disable = ["bare-except"]
+disable = []
 
 [severity]
 unused-import = "warning"
-unused-local = "error"
-mutable-defaults = "info"
-wildcard-import = "error"
+unused-local = "info"
+mutable-defaults = "warning"
+wildcard-import = "warning"
 shadow-builtins = "error"
