@@ -1,6 +1,6 @@
 def main():
     try:
-        1 / 0
+        _ = 1 / 0
     except:
         print("oops")
 

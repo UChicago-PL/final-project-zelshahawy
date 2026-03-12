@@ -74,6 +74,8 @@ test-suite pyleft-test
   build-depends:
       base ^>=4.18.3.0
     , pyleft
+    , directory >=1.3 && <1.4
+    , filepath >=1.4 && <1.6
   default-language: GHC2021
 
 source-repository head
